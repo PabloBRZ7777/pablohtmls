@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imagem para Vídeo com IA</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        #imagemInput, #textoInput {
+            padding: 10px;
+            margin: 10px;
+            background-color: #4ecdc4;
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #imagemInput:hover, #textoInput:hover {
+            background-color: #38b2a6;
+        }
+
+        #gerarVideoBtn {
+            padding: 10px 20px;
+            background-color: #ff6b6b;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        #gerarVideoBtn:hover {
+            background-color: #e85050;
+        }
+
+        #videoResult {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Transforme sua Imagem em Vídeo com IA</h1>
+    <p>Carregue uma imagem e escreva um texto para criar um vídeo com a ajuda de uma IA.</p>
+    
+    <!-- Input para imagem -->
+    <input type="file" id="imagemInput" accept="image/*"><br>
+    
+    <!-- Campo de texto para descrição -->
+    <textarea id="textoInput" rows="4" cols="50" placeholder="Escreva o texto que a IA deve seguir..."></textarea><br>
+    
+    <!-- Botão para gerar vídeo -->
+    <button id="gerarVideoBtn">Gerar Vídeo</button>
+
+    <!-- Área para exibir o vídeo gerado -->
+    <div id="videoResult">
+        <h2>Seu vídeo gerado:</h2>
+        <video id="videoPlayer" width="400" controls></video>
+    </div>
+
+    <script>
+        document.getElementById('gerarVideoBtn').addEventListener('click', async () => {
+            const imagemInput = document.getElementById('imagemInput').files[0];
+            const textoInput = document.getElementById('textoInput').value;
+
+            if (!imagemInput || !textoInput) {
+                alert('Por favor, carregue uma imagem e escreva um texto.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', imagemInput);
+            formData.append('text', textoInput);
+
+            try {
+                // Enviar dados para o backend via uma API que processa a imagem e o texto para gerar o vídeo
+                const response = await fetch('URL_DA_API_BACKEND', { // Substitua pela URL da sua API
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const videoUrl = data.videoUrl;  // Supondo que a API retorne a URL do vídeo gerado
+
+                    // Exibe o vídeo gerado na página
+                    const videoPlayer = document.getElementById('videoPlayer');
+                    videoPlayer.src = videoUrl;
+                    document.getElementById('videoResult').style.display = 'block';
+                } else {
+                    alert('Erro ao gerar o vídeo. Tente novamente mais tarde.');
+                }
+            } catch (error) {
+                alert('Ocorreu um erro: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
